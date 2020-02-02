@@ -13,7 +13,7 @@ public class Menu {
                    , "c) Insertar W1"
                    , "d) Insertar W2"
                    , "e) Combinar alfabeto 1 y alfabeto 2"
-                   , "f)"
+                   , "f) Obtener magnitud de W1"
                    , "g)"
                    , "h)"
                    , "i) "
