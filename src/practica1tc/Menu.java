@@ -12,7 +12,7 @@ public class Menu {
                    , "b) Insertar el alfabeto 2"
                    , "c) Insertar W1"
                    , "d) Insertar W2"
-                   , "e)"
+                   , "e) Combinar alfabeto 1 y alfabeto 2"
                    , "f)"
                    , "g)"
                    , "h)"
