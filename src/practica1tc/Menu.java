@@ -81,9 +81,24 @@ public class Menu {
             }
             min++;
         }
-        chain = arrchain.toArray(new String[arrchain.size()]);
         
-        return chain;
+        return sortAlphabet(arrchain.toArray(new String[arrchain.size()]));
+    }
+    
+    
+    public String[] sortAlphabet(String[] s){ 
+        for (int i=1 ;i<s.length; i++){ 
+            String temp = s[i]; 
+
+            int j = i - 1; 
+            while (j >= 0 && temp.length() > s[j].length()){ 
+                s[j+1] = s[j]; 
+                j--;
+            } 
+            s[j+1] = temp; 
+        }
+        
+        return s;
     }
     
     public String readChain(String[] alphabet, int cNum){
@@ -92,12 +107,15 @@ public class Menu {
         do{
             System.out.println("Inserte la cadena W" + cNum +" elemento del primer alfabeto");
             chain = scan.nextLine();
-        }while(!isOfAlphabeth(alphabet, chain));
+        }while(!isOfAlphabet(alphabet, chain));
         
         return chain;
     }
     
-    public boolean isOfAlphabeth(String[] alphabeth, String chain){
-        return Arrays.stream(alphabeth).parallel().allMatch(chain::contains);
-    }
+    public boolean isOfAlphabet(String[] alphabet, String chain){
+        for(Object o: alphabet)
+            chain = chain.replace(o.toString(), "");
+        
+        return chain.isEmpty();
+    } 
 }
