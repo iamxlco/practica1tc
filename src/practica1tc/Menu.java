@@ -12,8 +12,8 @@ public class Menu {
                    , "b) Insertar el alfabeto 2"
                    , "c) Insertar W1"
                    , "d) Insertar W2"
-                   , "e) Combinar alfabeto 1 y alfabeto 2"
-                   , "f) Obtener magnitud de W1"
+                   , "e) Generar (w1w2)^n"
+                   , "f) "
                    , "g)"
                    , "h)"
                    , "i) "
@@ -45,6 +45,7 @@ public class Menu {
                     w2 = readChain(a1, 2);
                     break;
                 case 'e':
+                    powChain(w1, w2);
                     break;
                 case 'f':
                     break;
@@ -118,4 +119,32 @@ public class Menu {
         
         return chain.isEmpty();
     } 
+    
+    public void powChain(String w1, String w2){
+        System.out.println("Inserta n:");
+        int n = scan.nextInt();
+        
+        String chain = w1+w2;
+        if(n<0){
+            String temp = "";
+            for(int i=chain.length() ; i>0 ; i--)
+                temp+=chain.charAt(i-1);
+                
+            chain = temp;
+            n = n*(-1);
+            
+            for(int i=0; i<n-1 ; i++)
+                chain += chain;
+        }else{
+            if(n>0){
+                for(int i = 0; i < n-1 ; i++ ){
+                    chain += chain;
+                }
+            }
+            else{
+                chain = "λ";
+            }
+        }    
+        System.out.println(chain);
+    }
 }
