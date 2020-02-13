@@ -3,6 +3,7 @@ package practica1tc;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
@@ -13,10 +14,11 @@ public class Menu {
                    , "c) Insertar W1"
                    , "d) Insertar W2"
                    , "e) Generar (w1w2)^n"
-                   , "f) "
-                   , "g)"
-                   , "h)"
+                   , "f) Obtener |W1|x"
+                   , "g) Es prefijo o sufijo"
+                   , "h) Palíndromo"
                    , "i) "
+                   , "j) 3 palabras aleatorias"  
                    , "z) Salir"};
     Scanner scan;
 
@@ -26,7 +28,7 @@ public class Menu {
     
     public void startMenu(){
         do {
-            for(int i=0 ; i<10 ; i++){
+            for(int i=0 ; i<menu.length ; i++){
                 System.out.println(menu[i]);
             }
             opc = scan.nextLine().charAt(0);
@@ -48,12 +50,19 @@ public class Menu {
                     powChain(w1, w2);
                     break;
                 case 'f':
+                    countLetter(w1);
                     break;
                 case 'g':
+                    prefixSufix(w1, w2);
                     break;
                 case 'h':
+                    isPalindrome();
                     break;
                 case 'i':
+                    askPow();
+                    break;
+                case 'j':
+                    randomWords();
                     break;
                 case 'z':
                     break;
@@ -106,7 +115,7 @@ public class Menu {
         String chain = "";
         
         do{
-            System.out.println("Inserte la cadena W" + cNum +" elemento del primer alfabeto");
+            System.out.println("Inserte la cadena W" + cNum +" palabra de 𝝨1");
             chain = scan.nextLine();
         }while(!isOfAlphabet(alphabet, chain));
         
@@ -118,33 +127,124 @@ public class Menu {
             chain = chain.replace(o.toString(), "");
         
         return chain.isEmpty();
-    } 
+    }
+    
+    public boolean isPartOf(String[] alphabet, String x){
+        List<String> list = Arrays.asList(alphabet);
+        return list.contains(x);
+    }
     
     public void powChain(String w1, String w2){
+        String total = "";
         System.out.println("Inserta n:");
-        int n = scan.nextInt();
+        int n = Integer.parseInt(scan.nextLine());
         
         String chain = w1+w2;
         if(n<0){
             String temp = "";
-            for(int i=chain.length() ; i>0 ; i--)
-                temp+=chain.charAt(i-1);
-                
-            chain = temp;
+            for(int i=chain.length()-1; i>=0; i--)
+                temp+=chain.charAt(i);
             n = n*(-1);
-            
-            for(int i=0; i<n-1 ; i++)
-                chain += chain;
+            for(int i=0; i<n ; i++)
+                total += temp;
         }else{
             if(n>0){
-                for(int i = 0; i < n-1 ; i++ ){
-                    chain += chain;
-                }
+                for(int i = 0; i<n ; i++ )
+                    total += chain;
             }
             else{
-                chain = "λ";
+                total = "λ";
             }
         }    
-        System.out.println(chain);
+        System.out.println("\n"+total+"\n");
+        
+    }
+    
+    public void countLetter(String w1){
+        String x = "";
+        do{
+            System.out.println("Dame x elemento de 𝝨1");
+            x = scan.nextLine();
+        }while(!isPartOf(a1, x));
+        
+        System.out.println((w1.split(x,-1).length)-1);
+    }
+    
+    public void prefixSufix(String w1, String w2){
+        String msg = "";
+        if(w1.equals(w2))
+            msg+= "\nPrefijo impropio"
+                    + "\nSufijo impropio";
+        else{
+            if(w2.startsWith(w1))
+                msg+= "\nPrefijo propio";
+            if(w2.endsWith(w1))
+                msg+= "\nSufijo propio";
+        }  
+    }
+    
+    public void isPalindrome(){
+        String w3 = readChain(a1, 3);
+        
+        int n = w3.length()/2;
+        boolean flag = true;
+        
+        for(int i=0; i<n; i++) {
+            if(w3.charAt(i)!=w3.charAt(w3.length()-i-1))
+                flag=false;
+        }
+        
+        System.out.println(flag ? "Es palindromo" : "No es palindromo");
+    }
+    
+    public void askPow(){
+        System.out.println("Inserte n: ");
+        String number = scan.nextLine();
+        int n = Integer.parseInt(number);
+        
+        String a[] = {""};
+        if(n!=0)
+            powAlphabet(a, n, 1);
+        else
+            System.out.println("λ");
+        
+        
+    }
+    
+    public void powAlphabet(String[] a, int pot, double counter){
+        String ai[] = new String[(int)Math.pow(a1.length, counter)];
+        
+        if(pot>0){
+            for(int i=0; i<a.length; i++){
+                for (String a11 : a1) {
+                    ai[i] = a[i] + a11;
+                }
+            }
+            pot--;
+            counter++;
+            powAlphabet(ai, pot, counter);
+        }
+        else{
+            printAlphabet(ai);
+        }
+    }
+    
+    public void printAlphabet(String a[]){
+        for (int i = 0; i<a.length; i++) {
+            System.out.print(i%10==0 ? "\n"+a[i]+", " : a[i]+", ");
+        }
+        System.out.println("");
+    }
+    
+    public void randomWords(){
+        for(int i=0; i<3; i++) {
+            String word = "";
+            int length = (int) (Math.random()*20);
+            for(int j=0; j<length; j++){
+                int nLetter = (int) (Math.random()*(a1.length));
+                word += a1[nLetter];
+            }
+            System.out.println("A"+(i+1)+": " +word);
+        }
     }
 }
