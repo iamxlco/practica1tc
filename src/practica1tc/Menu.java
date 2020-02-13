@@ -202,36 +202,42 @@ public class Menu {
         String number = scan.nextLine();
         int n = Integer.parseInt(number);
         
-        String a[] = {""};
+        String copy[] = new String[a1.length];
+        for(int i=0; i<a1.length; i++)
+            copy[i] = a1[i];
+        
         if(n!=0)
-            powAlphabet(a, n, 1);
+            powAlphabet(copy, n-1, 2);
         else
             System.out.println("λ");
         
         
     }
     
-    public void powAlphabet(String[] a, int pot, double counter){
-        String ai[] = new String[(int)Math.pow(a1.length, counter)];
-        
+    public void powAlphabet(String[] a, int pot, int counter){
         if(pot>0){
-            for(int i=0; i<a.length; i++){
-                for (String a11 : a1) {
-                    ai[i] = a[i] + a11;
+            String array[];
+            int tamano=(int)Math.pow(a1.length,counter);
+            System.out.println(tamano);
+            array=new String[tamano];
+            int k=0;
+            for(int i=0;i<a.length;i++){
+                for(int j=0;j<a1.length;j++){
+                    array[k]=a[i]+a1[j];
+                    k++;
                 }
             }
-            pot--;
             counter++;
-            powAlphabet(ai, pot, counter);
+            pot--;
+            powAlphabet(array,pot,counter);
         }
-        else{
-            printAlphabet(ai);
-        }
+        else
+            printAlphabet(a, counter);
     }
     
-    public void printAlphabet(String a[]){
+    public void printAlphabet(String a[], int pow){
         for (int i = 0; i<a.length; i++) {
-            System.out.print(i%10==0 ? "\n"+a[i]+", " : a[i]+", ");
+            System.out.print(i%Math.pow(3, pow-2)==0 ? "\n"+a[i]+", " : a[i]+", ");
         }
         System.out.println("");
     }
