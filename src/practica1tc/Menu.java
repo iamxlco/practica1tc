@@ -17,7 +17,7 @@ public class Menu {
                    , "f) Obtener |W1|x"
                    , "g) Es prefijo o sufijo"
                    , "h) Palíndromo"
-                   , "i) "
+                   , "i) Elevar 𝝨 a la n"
                    , "j) 3 palabras aleatorias"  
                    , "z) Salir"};
     Scanner scan;
@@ -73,26 +73,27 @@ public class Menu {
     }
     
     public String[] readAlphabet(int a){
-        String chain[] = {""};
-        ArrayList<String> arrchain = new ArrayList<>();
-        
-        char option = 'Y';
-        int min = 0;
-        
-        System.out.println("Inserte los elementos del alfabeto " + a);
-        
-        while(!(option == 'N' || option == 'n')){
-            System.out.println("Elemento: ");
-            arrchain.add(scan.nextLine());
-            
-            if(min > 1){
-                System.out.println("¿Agregar más elementos? Y/N");
-                option = scan.nextLine().charAt(0);
+        System.out.println("1) Insertar elementos"
+                + "\n2) Rango");
+        char sel = scan.nextLine().charAt(0);
+        String arr[];
+        if(sel == '1'){
+            System.out.println("Inserte los elementos separados con comas");
+            String alph = scan.nextLine();
+            arr = alph.split(",");
+            for(int i = 0; i<arr.length; i++)
+                arr[i] = arr[i].replace(",", "");
+        }else{
+            System.out.println("Dame el primer elemento del rango");
+            char c1 = scan.nextLine().charAt(0);
+            System.out.println("Dame el segundo elemento del rango");
+            char c2 = scan.nextLine().charAt(0);
+            arr= new String[c2-c1];
+            for (int i=0; i<arr.length; i++) {
+                arr[i] = (char)(c1 + i)+"";
             }
-            min++;
         }
-        
-        return sortAlphabet(arrchain.toArray(new String[arrchain.size()]));
+        return arr;
     }
     
     
@@ -171,16 +172,39 @@ public class Menu {
     }
     
     public void prefixSufix(String w1, String w2){
+        String ins1, ins2;
+        ins1 = w1;
+        ins2 = w2;
         String msg = "";
         if(w1.equals(w2))
             msg+= "\nPrefijo impropio"
                     + "\nSufijo impropio";
         else{
-            if(w2.startsWith(w1))
-                msg+= "\nPrefijo propio";
-            if(w2.endsWith(w1))
-                msg+= "\nSufijo propio";
-        }  
+            if(w2.contains(w1)){
+                    msg += "\nSubcadena";
+                if(w2.startsWith(w1))
+                    msg+= "\nPrefijo propio";
+                if(w2.endsWith(w1))   
+                    msg+= "\nSufijo propio";
+            }
+            else{
+                int k = 0;
+                for(int i = 0;i<ins2.length();i++) {
+                    if(ins1.charAt(k)==ins2.charAt(i)){
+                        k++;
+                    }
+                    if(k==ins1.length())
+                        break;
+                }
+                if(k==ins1.length()){
+                    msg += "\nEs subsecuencia";
+                }
+                else{
+                    msg = "No es nada";
+                }
+            }
+            
+        }
     }
     
     public void isPalindrome(){
@@ -198,57 +222,85 @@ public class Menu {
     }
     
     public void askPow(){
+        System.out.println("Qué alfabeto desas elevar? (1 o 2)");
+        char sel = scan.nextLine().charAt(0);
         System.out.println("Inserte n: ");
         String number = scan.nextLine();
         int n = Integer.parseInt(number);
         
-        String copy[] = new String[a1.length];
-        for(int i=0; i<a1.length; i++)
-            copy[i] = a1[i];
-        
-        if(n!=0)
-            powAlphabet(copy, n-1, 2);
+        if(n!=0){
+            String copy[] = null;
+            int length = 0;
+            switch(sel){
+                case '1':
+                    copy = new String[a1.length];
+                    for(int i=0; i<a1.length; i++)
+                        copy[i] = a1[i];
+                    length = a1.length;
+                break;
+                case '2':
+                    copy = new String[a2.length];
+                    for(int i=0; i<a2.length; i++)
+                        copy[i] = a2[i];
+                    length = a2.length;
+                break;
+                default:
+                    System.out.println("Esa opción no existe");
+            }
+            if(copy!=null)
+                powAlphabet(copy, n-1, 2, length, sel);
+        }
         else
             System.out.println("λ");
-        
-        
     }
     
-    public void powAlphabet(String[] a, int pot, int counter){
+    public void powAlphabet(String[] a, int pot, int counter, int length, char sel){
         if(pot>0){
             String array[];
-            int tamano=(int)Math.pow(a1.length,counter);
-            System.out.println(tamano);
+            int tamano=(int)Math.pow(length,counter);
             array=new String[tamano];
             int k=0;
             for(int i=0;i<a.length;i++){
-                for(int j=0;j<a1.length;j++){
-                    array[k]=a[i]+a1[j];
+                for(int j=0;j<length;j++){
+                    if(sel == '1')
+                        array[k]=a[i]+a1[j];
+                    else
+                        array[k]=a[i]+a2[j];
                     k++;
                 }
             }
             counter++;
             pot--;
-            powAlphabet(array,pot,counter);
+            powAlphabet(array,pot,counter, length, sel);
         }
-        else
-            printAlphabet(a, counter);
+        else{
+            printAlphabet(a);
+            System.out.println("\n");
+        }    
     }
     
-    public void printAlphabet(String a[], int pow){
+    public void printAlphabet(String a[]){
         for (int i = 0; i<a.length; i++) {
-            System.out.print(i%Math.pow(3, pow-2)==0 ? "\n"+a[i]+", " : a[i]+", ");
+            System.out.print(i%5==0 ? "\n"+a[i]+", " : a[i]+", ");
         }
-        System.out.println("");
     }
     
     public void randomWords(){
+        System.out.println("¿De qué alfabeto quieres generar las palabras? (1 o 2)");
+        char sel = scan.nextLine().charAt(0);
         for(int i=0; i<3; i++) {
             String word = "";
             int length = (int) (Math.random()*20);
             for(int j=0; j<length; j++){
-                int nLetter = (int) (Math.random()*(a1.length));
-                word += a1[nLetter];
+                if(sel == '1'){
+                    int nLetter = (int) (Math.random()*(a1.length));
+                    word += a1[nLetter];
+                }
+                else{
+                    int nLetter = (int) (Math.random()*(a2.length));
+                    word += a2[nLetter];
+                }
+                
             }
             System.out.println("A"+(i+1)+": " +word);
         }
